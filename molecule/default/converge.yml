@@ -2,6 +2,6 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include mirsg.postgresql"
-      include_role:
+    - name: Create and setup a postgresql database
+      ansible.builtin.include_role:
         name: "mirsg.postgresql"

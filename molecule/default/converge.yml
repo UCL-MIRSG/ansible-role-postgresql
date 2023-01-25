@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include mirsg.postgresql"
+      include_role:
+        name: "mirsg.postgresql"

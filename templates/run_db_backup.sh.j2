@@ -5,7 +5,7 @@ set -e
 # Set by the ansible script
 pg_bin_dir="{{ postgresql.bin_directory }}"
 backup_directory="{{ postgresql_backup.directory }}"
-db_name="{{ postgresql_configuration.name }}"
+db_name="{{ postgresql_connection.database_name }}"
 
 # We will label the backup filenames with the current time
 date_stamp="$(date +"%F-%H-%M-%S")"

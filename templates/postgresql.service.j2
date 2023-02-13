@@ -1,5 +1,5 @@
-.include /lib/systemd/system/{{ postgres.service_name }}.service
+.include /lib/systemd/system/{{ postgresql_service_name }}.service
 
 [Service]
-Environment=PGPORT={{ postgresql_configuration.port }}
-Environment=PGDATA={{ postgresql_configuration.data_directory }}
+Environment=PGPORT={{ postgresql_connection.port }}
+Environment=PGDATA={{ postgresql.data_directory }}

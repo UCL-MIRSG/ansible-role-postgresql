@@ -1,0 +1,5 @@
+---
+roles:
+  - src: https://github.com/UCL-MIRSG/ansible-role-ssl-certificates.git
+    version: 2023.02.8.0
+    name: mirsg.ssl_certificates

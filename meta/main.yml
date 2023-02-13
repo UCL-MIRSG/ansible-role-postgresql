@@ -45,8 +45,4 @@ galaxy_info:
     # NOTE: A tag is limited to a single word comprised of alphanumeric characters.
     #       Maximum 20 tags per role.
 
-dependencies:
-  - src: https://github.com/UCL-MIRSG/ansible-role-ssl-certificates.git
-    version: 2023.02.8.0
-    name: mirsg.ssl_certificates
-  # List your role dependencies here, one per line
+  # dependencies are listed in requirements.yml

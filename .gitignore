@@ -135,6 +135,9 @@ dmypy.json
 *.retry
 *.*~
 
+# Ansibe molecule
+galaxy_roles
+
 # Exclude all binaries
 *.bin
 *.jar

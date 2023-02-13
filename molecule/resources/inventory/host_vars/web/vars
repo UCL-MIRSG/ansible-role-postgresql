@@ -13,7 +13,7 @@ postgresql_client_ssl_certificate:
   use_pk8: true
   pk8_filename: "/usr/share/tomcat/.postgresql/postgresql.pk8"
   csr_filename: "/usr/share/tomcat/.postgresql/postgresql.csr"
-  csr_common_name: "{{ web.hostname }}"
+  csr_common_name: "{{ web_vm.hostname }}"
   certificate_filename: "/usr/share/tomcat/.postgresql/postgresql.crt"
   provider: "selfsigned"
   cache_filename: "{{ database_client_certificate_cache_filename }}" # where to store the client certificate in cache

@@ -9,12 +9,12 @@ database_client_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certific
 
 selinux_enabled: false
 
-web:
+web_vm:
   hostname: "{{ web_hostname }}"
   url: "https://{{ web_hostname }}"
   ip: "192.168.56.10"
 
-db:
+db_vm:
   hostname: "{{ db_hostname }}"
   port: 5432
   database_name: "database"

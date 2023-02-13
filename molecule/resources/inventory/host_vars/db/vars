@@ -2,8 +2,6 @@
 # Variables for creating a postgresql server
 # mirsg.postgresql
 postgresql_version: "12"
-postgresql_rpm_rhel7: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-postgresql_rpm_rhel8: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
 postgresql_service_name: "postgresql-{{ postgresql_version }}"
 postgresql_package_name: "postgresql{{ postgresql_version | replace('.', '') }}"
 postgresql_bin_directory: "/usr/pgsql-{{ postgresql_version }}/bin"
@@ -13,32 +11,33 @@ postgresql:
   owner: "postgresql"
   group: "postgresql"
   base_directory: "/var/lib/pgsql"
+  bin_directory: "{{ postgresql_bin_directory }}"
   log_directory: "/var/log/postgresql"
-  configuration_directory: "{{ postgresql_data_dir }}"
-  data_directory: "{{ postgresql_data_dir }}"
+  configuration_directory: "{{ postgresql_data_directory }}"
+  data_directory: "{{ postgresql_data_directory }}"
   external_storage_directory: "/storage/pgsql"
   external_data_directory: "/storage/pgsql/{{ postgresql_version }}/data"  # symlink to data_directory
   external_backups_directory: "/var/lib/pgsql/backups"
   backup_script: "/var/lib/pgsql/run_db_backup.sh"  # script to run cron backup job
-  disable_gpg_check: false  # only set to true when running on Azure
+  disable_gpg_check: "{{ true if 'azure' in inventory_hostname else false }}"  # only disable when running on Azure
   rpm_gpg_key_pgdg: "https://www.postgresqlql.org/download/keys/RPM-GPG-KEY-PGDG"  # not needed for CentOS 7
-  rpm: "{{ postgresql_rpm_rhel7 }}"  # different for RedHat 7 / 8 / 9
+  rpm: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_facts['distribution_major_version'] }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
   yum_package: "{{ postgresql_package_name }}-server"
   yum_contrib_package: "{{ postgresql_package_name }}-contrib"  # only needed on CentOS 7
   service_name: "{{ postgresql_service_name }}"
   service_filename: "/etc/systemd/system/{{ postgresql_service_name }}.service"
-  configuration_filename: "{{ postgresql_data_dir }}/postgresql.conf"
-  hba_configuration_filename: "{{ postgresql_data_dir }}/pg_hba.conf"
+  configuration_filename: "{{ postgresql_data_directory }}/postgresql.conf"
+  hba_configuration_filename: "{{ postgresql_data_directory }}/pg_hba.conf"
   data_files_regex: "/var/lib/pgsql(/.*)?"  # allow postgresql to modify these files when SELinux is enabled
-  setup_command: "{{ postgresql_bin_dir }}/\
+  setup_command: "{{ postgresql_bin_directory }}/\
     {{ 'postgresql96' if postgresql_version == '9.6' else postgresql_service_name }}-setup"
   client_certificate_filename: "/var/lib/pgsql/certs/root.crt"  # where to copy the client certificate to on the server
 
 postgresql_database:
-  name: "{{ db.database_name }}"
-  hostname: "{{ db.hostname }}"
-  user: "{{ db.database_user }}"
-  password: "{{ db.database_password }}"
+  name: "{{ db_vm.database_name }}"
+  hostname: "{{ db_vm.hostname }}"
+  user: "{{ db_vm.database_user }}"
+  password: "{{ db_vm.database_password }}"
 
 # mirsg.ssl_certificates
 postgresql_ssl_certificate:
@@ -48,7 +47,7 @@ postgresql_ssl_certificate:
   privatekey_filename: "/var/lib/pgsql/certs/server.key"
   use_pk8: false
   csr_filename: "/var/lib/pgsql/certs/server.csr"
-  csr_common_name: "{{ db_hostname }}"
+  csr_common_name: "{{ db_vm.hostname }}"
   certificate_filename: "/var/lib/pgsql/certs/server.crt"
   provider: "selfsigned"
   cache_filename: "{{ database_server_certificate_cache_filename }}" # where to store the server certificate in cache

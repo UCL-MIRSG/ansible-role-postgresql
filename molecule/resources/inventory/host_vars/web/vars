@@ -1,7 +1,7 @@
 ---
 # Variables for setting up the postgresql client
-# mirsg.postgresql
-postgresql_client:
+# mirsg.postgresql setup
+postgresql_client_configuration:
   server_certificate_filename: "/usr/share/tomcat/.postgresql/root.crt" # where to copy the server certificate to on the client
 
 # mirsg.ssl_certificates

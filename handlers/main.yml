@@ -1,2 +1,9 @@
 ---
 # handlers file for postgresql
+- name: restart postgresql
+  ansible.builtin.service:
+    name: "{{ postgresql_service.name }}"
+    state: restarted
+
+- name: restore selinux contexts
+  ansible.builtin.command: restorecon -R -v {{ postgresql.base_directory }}

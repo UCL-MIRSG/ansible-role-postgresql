@@ -38,6 +38,7 @@ postgresql_database:
   hostname: "{{ db_vm.hostname }}"
   user: "{{ db_vm.database_user }}"
   password: "{{ db_vm.database_password }}"
+  client_ip: "web_vm.ip"  # required if using SSL
 
 # mirsg.ssl_certificates
 postgresql_ssl_certificate:

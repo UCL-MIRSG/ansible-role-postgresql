@@ -1,13 +1,14 @@
 ---
 ansible_cache_dir: "{{ lookup('env', 'HOME') }}/ansible_persistent_files"
 
+postgres_use_ssl: true
+selinux_enabled: false
+
 db_hostname: "db.local"
 web_hostname: "web.local"
 
 database_server_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certificates/{{ db_hostname }}.postgresql_server.crt"
 database_client_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certificates/{{ db_hostname }}.postgresql_client.crt"
-
-selinux_enabled: false
 
 web_vm:
   hostname: "{{ web_hostname }}"

@@ -1,17 +1,21 @@
 ---
 ansible_cache_dir: "{{ lookup('env', 'HOME') }}/ansible_persistent_files"
+
+db_hostname: "db.local"
+web_hostname: "web.local"
+
 database_server_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certificates/{{ db_hostname }}.postgresql_server.crt"
 database_client_certificate_cache_filename: "{{ ansible_cache_dir }}/pg_certificates/{{ db_hostname }}.postgresql_client.crt"
 
 selinux_enabled: false
 
 web:
-  hostname: "{{ hostvars['web']['ansible_host'] }}"
-  url: "https://{{ hostvars['web']['ansible_host'] }}"
-  ip: "{{ hostvars['web']['ansible_ip'] }}"
+  hostname: "{{ web_hostname }}"
+  url: "https://{{ web_hostname }}"
+  ip: "192.168.56.10"
 
 db:
-  hostname: "{{ hostvars['db']['ansible_host'] }}"
+  hostname: "{{ db_hostname }}"
   port: 5432
   database_name: "database"
   database_user: "user"

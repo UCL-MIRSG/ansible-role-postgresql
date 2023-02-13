@@ -11,6 +11,8 @@
     - name: Create self-signed SSL certificate for the client
       ansible.builtin.include_role:
         name: "mirsg.ssl_certificates"
+      vars:
+        ssl_certificate: "{{ postgresql_client_ssl_certificate }}"
 
 - name: Converge
   hosts: db

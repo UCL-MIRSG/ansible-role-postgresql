@@ -1,7 +1,7 @@
 ---
 ansible_cache_dir: "{{ lookup('env', 'HOME') }}/ansible_persistent_files"
 
-postgres_use_ssl: true
+postgresql_use_ssl: true
 selinux_enabled: false
 
 db_hostname: "db.local"

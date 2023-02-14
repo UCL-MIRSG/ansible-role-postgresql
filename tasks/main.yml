@@ -1,11 +1,5 @@
 ---
 # tasks file for postgresql
-- name: Ensure postgres RPM is installed
-  ansible.builtin.yum:
-    name: "{{ postgresql_install.rpm }}"
-    state: present
-    disable_gpg_check: "{{ postgresql_install.disable_gpg_check }}"
-
 - name: Setup for RedHat 7 - install sefcontext dependencies, psycopg2, and postgresql contrib
   when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7')
   ansible.builtin.yum:
@@ -13,7 +7,6 @@
       - libselinux-python
       - policycoreutils-python
       - python-psycopg2
-      - "{{ postgresql_install.yum_contrib_package }}"
     state: installed
 
 - name: Setup for RedHat 8+
@@ -24,12 +17,8 @@
         name:
           - python3-libselinux
           - policycoreutils-python-utils
+          - python3-psycopg2
         state: installed
-
-    - name: Install pyscopg2
-      ansible.builtin.pip:
-        name:
-          - psycopg2-binary
 
     - name: Disable default Postgres module # noqa command-instead-of-module no-changed-when
       ansible.builtin.command: yum module disable -y postgresql
@@ -39,10 +28,22 @@
         state: present
         key: "{{ postgresql_install.rpm_gpg_key_pgdg }}"
 
+- name: Ensure postgres RPM is installed
+  ansible.builtin.yum:
+    name: "{{ postgresql_install.rpm }}"
+    state: present
+    disable_gpg_check: "{{ postgresql_install.disable_gpg_check }}"
+
 - name: Ensure postgresql is installed
   ansible.builtin.yum:
     name: "{{ postgresql_install.yum_package }}"
     state: installed
+
+- name: Ensure postgresql contrib is installed
+  ansible.builtin.yum:
+    name: "{{ postgresql_install.yum_contrib_package }}"
+    state: installed
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7')
 
 - name: Ensure postgresql is not running during configuration change
   ansible.builtin.service:

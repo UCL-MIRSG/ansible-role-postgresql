@@ -44,3 +44,18 @@
         name: "mirsg.ssl_certificates"
       vars:
         ssl_certificate: "{{ postgresql_client_ssl_certificate }}"
+
+- name: Prepare - install and start crontabs on the db
+  hosts: db
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install crontabs
+      ansible.builtin.yum:
+        name: crontabs
+        state: present
+    - name: Start crontabs service
+      ansible.builtin.service:
+        name: crond.service
+        state: started
+        enabled: true

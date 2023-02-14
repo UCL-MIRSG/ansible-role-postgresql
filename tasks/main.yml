@@ -74,7 +74,7 @@
     state: directory
     mode: 0700
 
-- name: Ensure postgresql base directory {{ postgresql.base_directory }} exists
+- name: Ensure postgresql base directory exists - {{ postgresql.base_directory }}
   ansible.builtin.file:
     path: "{{ postgresql.base_directory }}"
     owner: "{{ postgresql.owner }}"
@@ -91,24 +91,29 @@
     mode: 0700
 
 - name: Check the status of the postgresql data directory symlink
-  ansible.builtin.stat: path={{ postgresql.data_directory }}
+  ansible.builtin.stat:
+    path: "{{ postgresql.data_directory }}"
   register: postgresql_data_directory_exists
 
 - name: Check if postgreql data directory is empty
-  ansible.builtin.find: paths={{ postgresql.data_directory }} patterns='*.*'
+  ansible.builtin.find:
+    paths: "{{ postgresql.data_directory }}"
+    patterns: "*.*"
   register: postgresql_data_files
 
 - name: Remove empty postgresql data directory (if a folder and not a symlink)
-  ansible.builtin.file: path={{ postgresql.data_directory }} state=absent
+  ansible.builtin.file:
+    path: "{{ postgresql.data_directory }}"
+    state: absent
   when: postgresql_data_directory_exists.stat.isdir is defined and postgresql_data_directory_exists.stat.isdir and postgresql_data_files.matched | int == 0
 
-- name: Ensure there is a symbolic link from {{ postgresql.data_directory }} to external storage {{ postgresql_external.data_directory }}
+- name: Ensure there is a symbolic link from postgresql data_directory to external storage
   ansible.builtin.file:
     src: "{{ postgresql_external.data_directory }}"
     dest: "{{ postgresql.data_directory }}"
     state: link
 
-- name: Create PostgreSQL database at {{ postgresql.data_directory }} if it does not already exist
+- name: Create PostgreSQL database directory if it does not already exist
   ansible.builtin.command: "{{ postgresql.setup_command }} initdb"
   environment:
     PATH: "$PATH:/sbin:/bin"
@@ -141,6 +146,7 @@
 
 - name: Setup SSL
   when: postgresql_use_ssl
+  notify: restart postgresql
   block:
     - name: Generate postgresql server certificate
       ansible.builtin.include_role:
@@ -155,8 +161,6 @@
         owner: "{{ postgresql.owner }}"
         group: "{{ postgresql.group }}"
         mode: 0600
-
-  notify: restart postgresql
 
 - name: Allow postgresql to modify files in data directory
   community.general.sefcontext:
@@ -176,4 +180,4 @@
   when: postgresql_custom_service_config.changed
 
 - name: Configure cron job for automatic postgres backups
-  include: configure_cron_backup.yml
+  ansible.builtin.include_tasks: configure_cron_backup.yml

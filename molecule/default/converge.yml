@@ -7,3 +7,5 @@
     - name: Create and setup a postgresql database
       ansible.builtin.include_role:
         name: "mirsg.postgresql"
+      vars:
+        ssl_certificate: "{{ postgresql_ssl_certificate }}"

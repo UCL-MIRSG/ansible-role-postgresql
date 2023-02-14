@@ -1,5 +1,35 @@
 ---
-- name: Prepare
+- name: Prepare - Install locale
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    server_locale: "en_GB.UTF-8"
+  tasks:
+    - name: Install locale for RedHat 7
+      when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7')
+      block:
+        - name: Allow install of other locals
+          ansible.builtin.lineinfile:
+            path: /etc/yum.conf
+            search_string: "override_install_langs=en_US.utf8"
+            state: absent
+
+        - name: Reinstall locales # noqa: package-latest
+          ansible.builtin.yum:
+            name: glibc-common
+            state: latest
+
+    - name: Install locale for RedHat 8
+      ansible.builtin.yum:
+        name: glibc-langpack-en
+        state: present
+      when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7', '>')
+
+    - name: Set the locale # noqa: no-changed-when
+      ansible.builtin.command: "localectl set-locale LANG={{ server_locale | quote }}"
+
+- name: Prepare - create client SSL certificate
   hosts: web
   become: true
   gather_facts: true
@@ -8,6 +38,7 @@
       ansible.builtin.yum:
         name: openssl
         state: present
+
     - name: Create self-signed SSL certificate for the client
       ansible.builtin.include_role:
         name: "mirsg.ssl_certificates"

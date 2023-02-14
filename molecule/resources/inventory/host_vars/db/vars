@@ -17,8 +17,8 @@ postgresql_install:
 
 # mirsg.postgresql - general setup
 postgresql:
-  owner: "postgresql"
-  group: "postgresql"
+  owner: "postgres"
+  group: "postgres"
   bin_directory: "{{ postgresql_bin_directory }}"
   base_directory: "/var/lib/pgsql"
   log_directory: "/var/log/postgresql"
@@ -65,4 +65,4 @@ postgresql_ssl_certificate:
   csr_common_name: "{{ db_vm.hostname }}"
   certificate_filename: "/var/lib/pgsql/certs/server.crt"
   provider: "selfsigned"
-  cache_filename: "{{ database_server_certificate_cache_filename }}" # required if using SSL, where to store the server certificate in cache
+  cache_filename: "{{ database_server_certificate_cache_filename }}"  # where to store the server certificate in cache

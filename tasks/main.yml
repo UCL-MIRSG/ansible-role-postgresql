@@ -61,8 +61,8 @@
 - name: Ensure postgresql external storage subdirectory exists
   ansible.builtin.file:
     path: "{{ postgresql_external.storage_directory }}"
-    owner: "{{ postgres.owner }}"
-    group: "{{ postgres.group }}"
+    owner: "{{ postgresql.owner }}"
+    group: "{{ postgresql.group }}"
     state: directory
     mode: 0700
 
@@ -146,7 +146,7 @@
 
 - name: Setup SSL
   when: postgresql_use_ssl
-  notify: restart postgresql
+  notify: Restart postgresql
   block:
     - name: Generate postgresql server certificate
       ansible.builtin.include_role:
@@ -157,7 +157,7 @@
     - name: Get postgresql client certificate from cache
       ansible.builtin.copy:
         src: "{{ database_client_certificate_cache_filename }}"
-        dest: "{{ postgresql_authentication.client_certificate_filename }}"
+        dest: "{{ postgresql_connection.client_certificate_filename }}"
         owner: "{{ postgresql.owner }}"
         group: "{{ postgresql.group }}"
         mode: 0600
@@ -167,7 +167,7 @@
     target: "{{ postgresql.base_directory }}(/.*)?"
     setype: postgresql_db_t
     state: present
-  notify: restore selinux contexts
+  notify: Restore selinux contexts
   when: selinux_enabled
 
 - name: "Ensure that any required restore of selinux contexts happens before postgres starts"

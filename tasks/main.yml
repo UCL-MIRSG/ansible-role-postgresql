@@ -20,8 +20,11 @@
           - python3-psycopg2
         state: installed
 
-    - name: Disable default Postgres module # noqa command-instead-of-module no-changed-when
+    - name: Disable default Postgres module # noqa command-instead-of-module
       ansible.builtin.command: yum module disable -y postgresql
+      register: disable_postgresql_module
+      changed_when:
+        - "'Disabling modules:' in disable_postgresql_module.stdout"
 
     - name: Import postgresql rpm key
       ansible.builtin.rpm_key:

@@ -1,0 +1,51 @@
+---
+dependency:
+  name: shell
+  command: ansible-galaxy install -r meta/requirements.yml --force
+
+driver:
+  name: docker
+
+platforms:
+  - name: db
+    image: geerlingguy/docker-centos7-ansible:latest
+    privileged: true
+    tmpfs:
+      - /run
+      - /tmp
+    cgroupns_mode: host
+    pre_build_image: true
+  - name: web
+    image: geerlingguy/docker-centos7-ansible:latest
+    privileged: true
+    tmpfs:
+      - /run``
+      - /tmp
+    cgroupns_mode: host
+    pre_build_image: true
+
+provisioner:
+  name: ansible
+  log: true
+  config_options:
+    defaults:
+      callbacks_enabled: profile_tasks, timer, yaml
+  inventory:
+    links:
+      group_vars: ../resources/inventory/group_vars/
+      host_vars: ../resources/inventory/host_vars/
+  playbooks:
+    prepare: ../resources/prepare.yml
+    converge: ../resources/converge.yml
+  env:
+    ANSIBLE_VERBOSITY: "1"
+
+verifier:
+  name: ansible
+  env:
+    ANSIBLE_VERBOSITY: "1"
+
+lint: |
+  set -e
+  yamllint .
+  ansible-lint .

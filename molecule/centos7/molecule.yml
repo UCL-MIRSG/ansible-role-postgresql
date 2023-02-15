@@ -10,21 +10,22 @@ platforms:
   - name: db
     image: geerlingguy/docker-centos7-ansible:latest
     command: ""
+    cgroupns_mode: host
     privileged: true
+    pre_build_image: true
     tmpfs:
       - /run
       - /tmp
-    cgroupns_mode: host
-    pre_build_image: true
+
   - name: web
     image: geerlingguy/docker-centos7-ansible:latest
     command: ""
-    privileged: true
-    tmpfs:
-      - /run``
-      - /tmp
     cgroupns_mode: host
+    privileged: true
     pre_build_image: true
+    tmpfs:
+      - /run
+      - /tmp
 
 provisioner:
   name: ansible

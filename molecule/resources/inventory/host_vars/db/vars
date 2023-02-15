@@ -28,14 +28,14 @@ postgresql:
   hba_configuration_filename: "{{ postgresql_data_directory }}/pg_hba.conf"
   data_files_regex: "/var/lib/pgsql(/.*)?"  # required if SELinux is enabled, allow postgresql to modify these files
   setup_command: "{{ postgresql_bin_directory }}/{{ postgresql_service_name }}-setup"
+  database_name: "{{ db_vm.database_name }}"
+  user_name: "{{ db_vm.database_user }}"
+  user_password: "{{ db_vm.database_password }}"
 
 # mirsg.postgresql - connections and authentication
 postgresql_connection:
   host: "{{ db_vm.hostname }}"
   port: "{{ db_vm.port }}"
-  database_name: "{{ db_vm.database_name }}"
-  user: "{{ db_vm.database_user }}"
-  password: "{{ db_vm.database_password }}"
   client_ip: "{{ web_vm.ip }}"
   client_certificate_filename: "/var/lib/pgsql/certs/root.crt"  # required if using SSL, where to copy the client certificate to on the server
 

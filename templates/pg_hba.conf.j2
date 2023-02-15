@@ -79,7 +79,7 @@ local   all             all                                     peer
 
 # IPv4 local connections:
 {% if postgresql_use_ssl %}
-hostssl    {{ postgresql_connection.database_name }}            {{ postgresql_connection.user }}            {{ postgresql_connection.client_ip }}    255.255.255.255    md5    clientcert=1
+hostssl    {{ postgresql.database_name }}            {{ postgresql.user_name }}            {{ postgresql_connection.client_ip }}    255.255.255.255    md5    clientcert=1
 {% else %}
-host    {{ postgresql_connection.database_name }}            {{ postgresql_connection.user }}            {{ postgresql_connection.client_ip }}    255.255.255.255    md5
+host    {{ postgresql.database_name }}            {{ postgresql.user_name }}            {{ postgresql_connection.client_ip }}    255.255.255.255    md5
 {% endif %}

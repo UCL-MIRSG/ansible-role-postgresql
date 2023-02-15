@@ -178,6 +178,13 @@
 - name: "Ensure that any required restore of selinux contexts happens before postgres starts"
   ansible.builtin.meta: flush_handlers
 
+- name: Ensure postgresql is running
+  ansible.builtin.service:
+    name: "{{ postgresql_service.name }}"
+    state: started
+    enabled: true
+  changed_when: false
+
 - name: Reload service daemon if custom service config changed # noqa no-handler
   ansible.builtin.service:
     name: "{{ postgresql_service.name }}"
@@ -186,3 +193,7 @@
 
 - name: Configure cron job for automatic postgres backups
   ansible.builtin.include_tasks: configure_cron_backup.yml
+
+- name: Create databse
+  ansible.builtin.include_tasks:
+    file: create_database.yml

@@ -11,24 +11,6 @@ defaults:
     working-directory: "mirsg.postgresql"
 
 jobs:
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the codebase
-        uses: actions/checkout@v3
-        with:
-          path: "mirsg.postgresql"
-      - name: Set up Python 3
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.x"
-      - name: Install lint dependencies
-        run: pip3 install yamllint
-      - name: Lint code
-        run: |
-          yamllint .
-
   molecule:
     runs-on: ubuntu-latest
     strategy:

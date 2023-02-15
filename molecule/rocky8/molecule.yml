@@ -9,6 +9,7 @@ driver:
 platforms:
   - name: db
     image: geerlingguy/docker-rockylinux8-ansible:latest
+    command: ""
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     cgroupns_mode: host
@@ -16,6 +17,7 @@ platforms:
     pre_build_image: true
   - name: web
     image: geerlingguy/docker-rockylinux8-ansible:latest
+    command: ""
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
     cgroupns_mode: host

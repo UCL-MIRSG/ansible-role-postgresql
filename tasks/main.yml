@@ -52,6 +52,7 @@
   ansible.builtin.service:
     name: "{{ postgresql_service.name }}"
     state: stopped
+  changed_when: false
 
 - name: Set custom postgresql service configuration
   ansible.builtin.template:

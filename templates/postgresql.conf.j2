@@ -91,8 +91,8 @@ ssl = off
 #ssl_ecdh_curve = 'prime256v1'
 #ssl_dh_params_file = ''
 {% if postgresql_use_ssl %}
-ssl_cert_file = '{{ ssl_certificate.certificate_filename }}'
-ssl_key_file = '{{ ssl_certificate.privatekey_filename }}'
+ssl_cert_file = '{{ postgresql_ssl_certificate.certificate_filename }}'
+ssl_key_file = '{{ postgresql_ssl_certificate.privatekey_filename }}'
 ssl_ca_file = '{{ postgresql_connection.client_certificate_filename }}'
 {% endif %}
 #ssl_crl_file = ''

@@ -1,6 +1,7 @@
 ---
 ansible_cache_dir: "{{ lookup('env', 'HOME') }}/ansible_persistent_files"
 
+postgresql_rpm_gpg_key_pgdg: "https://www.postgresql.org/download/keys/RPM-GPG-KEY-PGDG"  # not needed for CentOS 7
 postgresql_use_ssl: true
 selinux_enabled: false
 

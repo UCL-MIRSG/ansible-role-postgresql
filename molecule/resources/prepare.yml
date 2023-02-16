@@ -29,6 +29,25 @@
     - name: Set the locale # noqa: no-changed-when
       ansible.builtin.command: "localectl set-locale LANG={{ server_locale | quote }}"
 
+- name: Prepare - Disable default postgresl module and install rpm key
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Disable default postgresl module and install rpm key on RedHat 8+
+      when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7', '>')
+      block:
+        - name: Disable default Postgres module # noqa command-instead-of-module
+          ansible.builtin.command: yum module disable -y postgresql
+          register: disable_postgresql_module
+          changed_when:
+            - "'Disabling modules:' in disable_postgresql_module.stdout"
+
+        - name: Import postgresql rpm key
+          ansible.builtin.rpm_key:
+            state: present
+            key: "{{ postgresql_rpm_gpg_key_pgdg }}"
+
 - name: Prepare - create client SSL certificate
   hosts: web
   become: true

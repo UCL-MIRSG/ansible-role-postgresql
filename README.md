@@ -1,6 +1,11 @@
-# Ansible Role: mirsg.install_python
+# Ansible Role: mirsg.postgresql
 
 This role will install and configure a PostgreSQL database on a server.
+
+This role is tested on the following operating systems:
+
+- CentOS 7
+- Rocky Linux 8
 
 ## Requirements
 
@@ -8,29 +13,81 @@ If you would like to run Ansible Molecule to test this role, the requirements ar
 
 ## Role Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+There are several required variables you will need to set before using this role.
+
+### Variables for the PostgreSQL server
+
+See [this example](molecule/resources/inventory/host_vars/db/vars) `host_vars` file.
+
+### PostgreSQL client variables
+
+See [this example](molecule/resources/inventory/host_vars/web/vars) `host_vars` file.
+
+### PostgreSQL variables need by both the server and client
+
+`postgresql_rpm_gpg_key_pgdg`: URL from which to download the RPM GPP key; not needed for CentOS 7
+
+`postgresql_use_ssl:` boolean; whether to use SSL
 
 ## Dependencies
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+If `postgresql_use_ssl` is set to `true`, `mirsg.ssl_certificates` must be installed and the `ssl_certificate`
+variable defined for both the client and server.
 
 ## Example Playbook
 
-### Basic usage
+To use this role you must first stop any running PostgreSQL service and, if necessary, create a SSL certificate
+for the client:
 
-Create and setup a PostgreSQL database on a server called `server`:
+```yaml
+- name: Disable default postgresl module and install rpm key
+  hosts: all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Disable default postgresl module and install rpm key on RedHat 8+
+      when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7', '>')
+      block:
+        - name: Disable default Postgres module # noqa command-instead-of-module
+          ansible.builtin.command: yum module disable -y postgresql
+          register: disable_postgresql_module
+          changed_when:
+            - "'Disabling modules:' in disable_postgresql_module.stdout"
 
-    - hosts: server
-      roles:
-         - { role: mirsg.postgresql}
+        - name: Import postgresql rpm key
+          ansible.builtin.rpm_key:
+            state: present
+            key: "{{ postgresql_rpm_gpg_key_pgdg }}"
 
-### Passing variables
+- name: Create client SSL certificate
+  hosts: web
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install openssl
+      ansible.builtin.yum:
+        name: openssl
+        state: present
 
-You can set variables in the playbook as followes:
+    - name: Create self-signed SSL certificate for the client
+      ansible.builtin.include_role:
+        name: "mirsg.ssl_certificates"
+      vars:
+        ssl_certificate: "{{ postgresql_client_ssl_certificate }}"
+```
 
-    - hosts: server
-      roles:
-         - { role: mirsg.postgresql, disable_postgres_rpm_gpg_check: "true" }
+You can then use this role to install and configure PostgreSQL on a server:
+
+```yaml
+- name: Create and setup a postgresql database
+  hosts: db
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Create and setup a postgresql database
+      ansible.builtin.include_role:
+        name: "mirsg.postgresql"
+```
 
 ## License
 

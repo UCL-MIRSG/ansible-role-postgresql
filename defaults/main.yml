@@ -37,7 +37,7 @@ postgresql_external:
   storage_directory: "/storage/pgsql"
   data_directory: "/storage/pgsql/{{ postgresql_version }}/data" # symlink to data_directory
 
-# mirsg.postgresql - backup
+# mirsg.postgresql - backup
 postgresql_backup:
   directory: "/var/lib/pgsql/backups"
   script: "/var/lib/pgsql/run_db_backup.sh" # script to run cron backup job

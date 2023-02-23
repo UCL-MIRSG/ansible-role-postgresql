@@ -27,6 +27,8 @@ postgresql:
   hba_configuration_filename: "{{ postgresql_data_directory }}/pg_hba.conf"
   data_files_regex: "/var/lib/pgsql(/.*)?"  # required if SELinux is enabled, allow postgresql to modify these files
   setup_command: "{{ postgresql_bin_directory }}/{{ postgresql_service_name }}-setup"
+
+postgresql_database:
   database_name: "{{ db_vm.database_name }}"
   user_name: "{{ db_vm.database_user }}"
   user_password: "{{ db_vm.database_password }}"

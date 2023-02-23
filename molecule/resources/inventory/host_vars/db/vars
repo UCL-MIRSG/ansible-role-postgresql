@@ -1,33 +1,5 @@
 ---
 # Variables for creating a postgresql server
-# mirsg.postgresql - these variables are not used outside of this file
-postgresql_version: "12"
-postgresql_service_name: "postgresql-{{ postgresql_version }}"
-postgresql_package_name: "postgresql{{ postgresql_version | replace('.', '') }}"
-postgresql_bin_directory: "/usr/pgsql-{{ postgresql_version }}/bin"
-postgresql_data_directory: "/var/lib/pgsql/{{ postgresql_version }}/data"
-
-# mirsg.postgresql - download and install
-postgresql_install:
-  disable_gpg_check: "{{ true if 'azure' in inventory_hostname else false }}"  # only disable when running on Azure
-  rpm: "https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_facts['distribution_major_version'] }}-x86_64/pgdg-redhat-repo-latest.noarch.rpm"
-  yum_package: "{{ postgresql_package_name }}-server"
-  yum_contrib_package: "{{ postgresql_package_name }}-contrib"  # required only on CentOS 7
-
-# mirsg.postgresql - general setup
-postgresql:
-  owner: "postgres"
-  group: "postgres"
-  bin_directory: "{{ postgresql_bin_directory }}"
-  base_directory: "/var/lib/pgsql"
-  log_directory: "/var/log/postgresql"
-  data_directory: "{{ postgresql_data_directory }}"
-  configuration_directory: "{{ postgresql_data_directory }}"
-  configuration_filename: "{{ postgresql_data_directory }}/postgresql.conf"
-  hba_configuration_filename: "{{ postgresql_data_directory }}/pg_hba.conf"
-  data_files_regex: "/var/lib/pgsql(/.*)?"  # required if SELinux is enabled, allow postgresql to modify these files
-  setup_command: "{{ postgresql_bin_directory }}/{{ postgresql_service_name }}-setup"
-
 postgresql_database:
   database_name: "{{ db_vm.database_name }}"
   user_name: "{{ db_vm.database_user }}"
@@ -39,21 +11,6 @@ postgresql_connection:
   port: "{{ db_vm.port }}"
   client_ip: "{{ web_vm.ip }}"
   client_certificate_filename: "/var/lib/pgsql/certs/root.crt"  # required if using SSL, where to copy the client certificate to on the server
-
-# mirsg.postgresql - service
-postgresql_service:
-  name: "{{ postgresql_service_name }}"
-  filename: "/etc/systemd/system/{{ postgresql_service_name }}.service"
-
-# mirsg.postgresql - external storage
-postgresql_external:
-  storage_directory: "/storage/pgsql"
-  data_directory: "/storage/pgsql/{{ postgresql_version }}/data"  # symlink to data_directory
-
-# mirsg.postgresql - backup
-postgresql_backup:
-  directory: "/var/lib/pgsql/backups"
-  script: "/var/lib/pgsql/run_db_backup.sh"  # script to run cron backup job
 
 # mirsg.ssl_certificates - postgresql server
 postgresql_ssl_certificate:

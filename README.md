@@ -13,17 +13,19 @@ If you would like to run Ansible Molecule to test this role, the requirements ar
 
 ## Role Variables
 
-There are several required variables you will need to set before using this role.
+There are several **optional** variables for the PostgreSQL server. See the [defaults here](defaults/main.yml).
 
-### Variables for the PostgreSQL server
+There are also several **required** variables you will need to set before using this role.
+
+### Required variables for the PostgreSQL server
 
 See [this example](molecule/resources/inventory/host_vars/db/vars) `host_vars` file.
 
-### PostgreSQL client variables
+### Required variables for the PostgreSQL client
 
 See [this example](molecule/resources/inventory/host_vars/web/vars) `host_vars` file.
 
-### PostgreSQL variables need by both the server and client
+### Required varaibles for both the server and client
 
 `postgresql_rpm_gpg_key_pgdg`: URL from which to download the RPM GPP key; not needed for CentOS 7
 

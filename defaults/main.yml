@@ -32,8 +32,8 @@ postgresql_service:
   name: "{{ postgresql_service_name }}"
   filename: "/etc/systemd/system/{{ postgresql_service_name }}.service"
 
-# mirsg.postgresql - external storage
-postgresql_external:
+# mirsg.postgresql - storage
+postgresql_storage:
   storage_directory: "/storage/pgsql"
   data_directory: "/storage/pgsql/{{ postgresql_version }}/data" # symlink to data_directory
 

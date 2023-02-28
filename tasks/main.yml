@@ -50,17 +50,17 @@
     mode: 0644
   register: postgresql_custom_service_config
 
-- name: Ensure postgresql external storage subdirectory exists
+- name: Ensure postgresql storage subdirectory exists
   ansible.builtin.file:
-    path: "{{ postgresql_external.storage_directory }}"
+    path: "{{ postgresql_storage.storage_directory }}"
     owner: "{{ postgresql.owner }}"
     group: "{{ postgresql.group }}"
     state: directory
     mode: 0700
 
-- name: Ensure postgres external data subdirectory exists
+- name: Ensure postgres storage data subdirectory exists
   ansible.builtin.file:
-    path: "{{ postgresql_external.data_directory }}"
+    path: "{{ postgresql_storage.data_directory }}"
     owner: "{{ postgresql.owner }}"
     group: "{{ postgresql.group }}"
     state: directory
@@ -99,9 +99,9 @@
     state: absent
   when: postgresql_data_directory_exists.stat.isdir is defined and postgresql_data_directory_exists.stat.isdir and postgresql_data_files.matched | int == 0
 
-- name: Ensure there is a symbolic link from postgresql data_directory to external storage
+- name: Ensure there is a symbolic link from postgresql data_directory to storage
   ansible.builtin.file:
-    src: "{{ postgresql_external.data_directory }}"
+    src: "{{ postgresql_storage.data_directory }}"
     dest: "{{ postgresql.data_directory }}"
     state: link
 

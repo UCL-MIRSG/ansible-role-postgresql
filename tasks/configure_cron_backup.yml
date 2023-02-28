@@ -1,5 +1,5 @@
 ---
-- name: Ensure Postgresql external backup subdirectory exists
+- name: Ensure Postgresql backup subdirectory exists
   ansible.builtin.file:
     path: "{{ postgresql_backup.directory }}"
     owner: "{{ postgresql.owner }}"

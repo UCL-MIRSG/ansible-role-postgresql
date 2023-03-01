@@ -10,7 +10,8 @@ postgresql_connection:
   host: "{{ db_vm.hostname }}"
   port: "{{ db_vm.port }}"
   client_ip: "{{ web_vm.ip }}"
-  client_certificate_filename: "/var/lib/pgsql/certs/root.crt"  # required if using SSL, where to copy the client certificate to on the server
+  client_certificate_filename: "/var/lib/pgsql/certs/root.crt" # required if using SSL, where to copy the client certificate to on the server
+  listen_addresses: "'*'"
 
 # mirsg.ssl_certificates - postgresql server
 postgresql_ssl_certificate:
@@ -23,4 +24,4 @@ postgresql_ssl_certificate:
   csr_common_name: "{{ db_vm.hostname }}"
   certificate_filename: "/var/lib/pgsql/certs/server.crt"
   provider: "selfsigned"
-  cache_filename: "{{ database_server_certificate_cache_filename }}"  # where to store the server certificate in cache
+  cache_filename: "{{ database_server_certificate_cache_filename }}" # where to store the server certificate in cache

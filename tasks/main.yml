@@ -104,6 +104,7 @@
     src: "{{ postgresql_storage.data_directory }}"
     dest: "{{ postgresql.data_directory }}"
     state: link
+  when: postgresql_storage.data_directory != postgresql.data_directory
 
 - name: Create PostgreSQL database directory if it does not already exist
   ansible.builtin.command: "{{ postgresql.setup_command }} initdb"

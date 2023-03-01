@@ -56,8 +56,8 @@
 
 # - Connection Settings -
 
-#listen_addresses = 'localhost,{{ postgresql_connection.host }}'
-listen_addresses = '*'
+listen_addresses = {{ postgresql_connection.listen_addresses|default('localhost, postgresql_connection.host') }}
+#listen_addresses = '*'
                     # comma-separated list of addresses;
                     # defaults to 'localhost'; use '*' for all
                     # (change requires restart)

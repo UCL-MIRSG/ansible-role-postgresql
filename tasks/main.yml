@@ -145,7 +145,7 @@
       ansible.builtin.include_role:
         name: mirsg.ssl_certificates
       vars:
-        ssl_certificate: "{{ postgresql_ssl_certificate }}"
+        ssl_certificate: "{{ postgresql_ssl_certificate }}" # noqa: var-naming[no-role-prefix]
 
     - name: Get postgresql client certificate from cache
       ansible.builtin.copy:

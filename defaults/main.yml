@@ -30,6 +30,7 @@ postgresql:
 # mirsg.postgresql - service
 postgresql_service:
   name: "{{ postgresql_service_name }}"
+  directory: "/etc/systemd/system/{{ postgresql_service_name }}.service.d"
   filename: "/etc/systemd/system/{{ postgresql_service_name }}.service.d/postgresql_service.conf"
 
 # mirsg.postgresql - storage

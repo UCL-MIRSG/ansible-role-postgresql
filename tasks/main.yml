@@ -41,6 +41,13 @@
     state: stopped
   changed_when: false
 
+- name: Ensure postgresql service configuration directory exists
+  ansible.builtin.file:
+    path: "{{ postgresql_service.directory }}"
+    owner: "root"
+    group: "root"
+    mode: 0755
+
 - name: Set custom postgresql service configuration
   ansible.builtin.template:
     src: postgresql.service.j2

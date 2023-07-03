@@ -46,6 +46,7 @@
     path: "{{ postgresql_service.directory }}"
     owner: "root"
     group: "root"
+    state: directory
     mode: 0755
 
 - name: Set custom postgresql service configuration

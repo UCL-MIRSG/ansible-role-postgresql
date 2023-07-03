@@ -7,3 +7,6 @@
 
 - name: Restore selinux contexts
   ansible.builtin.command: restorecon -R -v {{ postgresql.base_directory }}
+  register: restore_selinux_contexts
+  changed_when:
+    - "'restorecon reset' in restore_selinux_contexts.stdout"

@@ -150,7 +150,7 @@
   ansible.builtin.debug:
     msg: trigger postgresql restart
   notify: Restart postgresql
-  changed_when: true
+  changed_when: false
 
 - name: Setup SSL
   when: postgresql_use_ssl

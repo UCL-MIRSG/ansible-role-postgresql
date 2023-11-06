@@ -6,7 +6,7 @@
       - libselinux-python
       - policycoreutils-python
       - python-psycopg2
-    state: installed
+    state: latest # noqa: package-latest
   when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7')
 
 - name: Setup for RedHat 8+ - install sefcontext dependencies and psycopg2
@@ -15,7 +15,7 @@
       - python3-libselinux
       - policycoreutils-python-utils
       - python3-psycopg2
-    state: installed
+    state: latest # noqa: package-latest
   when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7', '>')
 
 - name: Import postgresql RPM GPG key
@@ -33,12 +33,12 @@
 - name: Ensure postgresql is installed
   ansible.builtin.yum:
     name: "{{ postgresql_install.yum_package }}"
-    state: installed
+    state: latest # noqa: package-latest
 
 - name: Ensure postgresql contrib is installed
   ansible.builtin.yum:
     name: "{{ postgresql_install.yum_contrib_package }}"
-    state: installed
+    state: latest # noqa: package-latest
   when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7')
 
 - name: Ensure postgresql is not running during configuration change

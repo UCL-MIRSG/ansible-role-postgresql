@@ -18,12 +18,17 @@
     state: installed
   when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7', '>')
 
-- name: Ensure postgres RPM is installed
+- name: Import postgresql RPM GPG key
+  ansible.builtin.rpm_key:
+    state: present
+    key: "{{ postgresql_rpm_gpg_key_pgdg }}"
+  when: not postgresql_install.disable_gpg_check
+
+- name: Install RPM
   ansible.builtin.yum:
     name: "{{ postgresql_install.rpm }}"
     state: present
     disable_gpg_check: "{{ postgresql_install.disable_gpg_check }}"
-  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version'] is version('7', '>')
 
 - name: Ensure postgresql is installed
   ansible.builtin.yum:
